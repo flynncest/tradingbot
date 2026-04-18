@@ -1,66 +1,81 @@
 # Research Log
 
-## Date: 2026-04-18 (Saturday — market closed)
-Planning session for week of 2026-04-20. No open positions. No prior context in memory — this is a clean-slate framework watchlist to be validated against live prices and news at Monday's pre-market.
+## Date: 2026-04-18 (Saturday — planning for Mon 2026-04-20 / earnings week)
 
-## Current Watchlist (for Mon 2026-04-20)
+No open positions. Prior planning framework refreshed with live Friday 4/17 close data.
 
-NOTE: Entry/stop/target levels below are placeholders based on strategy framework (5% trailing stop, 8% hard cut, +10% partial target). Confirm actual price levels, volume, and catalyst news before acting.
+## Market Regime — RISK-ON / GREENLIGHT
+Friday 4/17 close:
+- **SPY 710.14 (+1.12%)** — at fresh record highs per news ("most hated rally keeps getting stronger")
+- **QQQ 648.85 (+1.35%)** — Nasdaq at records; software had its best week in ~25 years
+- **IWM 275.78 (+1.95%)** — small caps LEADING = healthy breadth, risk-on confirmed
+- **VIX** — data fetch errored; infer subdued given synchronized record highs across SPY/QQQ/IWM
+- **XLE 55.02 (-2.83%)** — energy sharply lower Friday (NYSE Energy Sector -4.4%); AVOID long energy, thesis from prior plan is invalidated
 
-### 1. NVDA — AI/semis momentum leader
-- **Thesis:** Semiconductor leadership + AI capex cycle. Classic RS vs SPY name. Watch for breakout above prior week's high on volume.
-- **Setup:** Pullback-to-20DMA bounce OR breakout of consolidation.
-- **Entry:** On confirmed break of Friday's high with 2x avg volume; start 50% size.
-- **Stop:** -5% trailing from entry high; hard -8% cut.
-- **Target:** +10% for partial, trail remainder.
-- **Risk:** Sector rotation out of megacap tech; macro risk-off.
+Regime verdict: Momentum tailwind. Lean long individual names with strong RS. Full position sizing allowed per strategy; earnings season = keep starters at 50%.
 
-### 2. SPY — Market regime tell
-- **Thesis:** Not a trade — used to read regime. If SPY trending above 20DMA, lean long on individual names; below 50DMA, stand down.
-- **Action:** Check 20/50DMA posture at open. No position.
+## Today's Watchlist (for Mon 2026-04-20)
 
-### 3. XLE — Energy sector momentum
-- **Thesis:** If crude is firming, energy has been a rotation beneficiary. Look for XLE breakout on volume.
-- **Entry:** Break of prior weekly high; start 50% size.
-- **Stop:** -5% trailing, -8% hard.
-- **Target:** +10% partial.
-- **Risk:** Oil reversal on demand fears or OPEC headline.
+### 1. ⭐ NVDA — PRIMARY HIGH-CONVICTION LONG
+- **Price:** 201.68 (+1.91% Fri, outperformed SPY)
+- **Catalyst:** AI/semis leadership; AVGO +1.89%, semis participating in Nasdaq record run
+- **Setup:** Breakout continuation. Friday high acts as pivot.
+- **Entry:** Break above Fri intraday high (~$202) on 2x avg volume (avg 177M). Start 50% size.
+- **Stop:** Hard -8% from entry (~$185.50); trailing -5% from high once in.
+- **Target:** +10% partial (~$222), trail remainder.
+- **Risk:** Megacap tech rotation; any AI capex scare headline.
 
-### 4. Earnings-season reaction play (TBD)
-- **Thesis:** Q1 2026 earnings season is active. Screen Monday morning for names that gapped up >5% on Friday post-earnings with volume, then pulled back modestly — classic continuation setup.
-- **Entry:** Intraday reclaim of post-earnings gap level.
-- **Stop:** Below gap fill; -8% hard.
-- **Target:** +10% partial, trail.
-- **Risk:** Failed gap = fast exit.
+### 2. ⭐ IGV (Software ETF) — SECONDARY HIGH-CONVICTION LONG
+- **Price:** 85.08 (+0.56% Fri but +best week in ~25 yrs per Yahoo)
+- **Catalyst:** Software sector momentum explosion; clean thematic breakout with volume confirmation across the sector
+- **Setup:** Pullback-to-rising-20DMA entry OR continuation on any Mon strength
+- **Entry:** On reclaim of Fri high or hold above Fri low on open; start 50% size
+- **Stop:** -5% trailing, -8% hard (~$78.30)
+- **Target:** +10% partial (~$93.60)
+- **Risk:** ETF is extended after best week in 25 years — chase risk is real. Keep size disciplined.
 
-### 5. IWM — Small-cap regime check
-- **Thesis:** If IWM is leading SPY on RS, risk-on breadth is healthy — greenlights higher conviction on momentum names. If lagging, stay cautious/smaller.
-- **Action:** Monitor, no position.
+### 3. IWM — Breadth continuation long
+- **Price:** 275.78 (+1.95%, leading the tape)
+- **Catalyst:** Small-cap RS leadership = risk-on breadth; fresh record
+- **Entry:** Above Fri high on volume; start 50%
+- **Stop:** -5% trailing, -8% hard (~$253.70)
+- **Target:** +10% partial (~$303)
+- **Risk:** Small caps are most sensitive to any rate/credit wobble
+
+### 4. ISRG — Earnings setup (NOT a pre-earnings hold)
+- **Price:** 469.21 (+2.00% Fri)
+- **Catalyst:** Reports Q1 after close Tue 4/21. Stock rising into print, YTD -16.92% = beaten-down name with reset expectations = classic post-earnings gap continuation candidate
+- **Plan:** DO NOT hold through print. Wait for post-earnings reaction Wed 4/22 open. If gaps +5% on volume and pulls back modestly, enter on reclaim of gap level.
+- **Entry:** TBD post-print
+- **Stop:** Below gap fill; -8% hard
+- **Target:** +10% partial
+
+### 5. XLE — REMOVED from long watchlist
+- Friday -2.83%, sector index -4.4%. Prior bullish thesis invalidated. Re-evaluate only after base/reclaim.
 
 ## High-Conviction Focus (1-2 best ideas)
-1. **NVDA** — highest-probability momentum setup IF it holds RS into Monday open and breaks range on volume. Primary long candidate.
-2. **Earnings gap continuation (TBD symbol)** — best R:R when a fresh catalyst + volume + clean technical align. Screen Monday open.
-
-## Market Regime
-- Unknown / TBD at Monday open. Checklist:
-  - SPY vs 20DMA and 50DMA
-  - VIX level (<15 complacent, 15-20 normal, >20 caution, >25 stand down)
-  - 10Y yield direction
-  - IWM relative strength vs SPY
+1. **NVDA** — cleanest momentum setup, RS leader, liquid, semis theme intact
+2. **IGV** — ride a historic sector move, but size conservatively given extension
 
 ## Key Risks / Events to Watch (week of 2026-04-20)
-- Ongoing Q1 2026 earnings reports — expect single-stock volatility
-- Any Fed speakers / FOMC minutes — check economic calendar Monday AM
-- Geopolitical / oil headlines
-- Since memory has no flagged catalysts, assume normal risk until confirmed
+- **Q1 2026 earnings season peak** — expect single-stock gap volatility
+- **ISRG** reports Tue 4/21 AMC
+- Watch for any Fed speaker headlines — calendar check Monday AM
+- Oil/energy headlines — XLE breakdown may signal demand concern; monitor for broader contagion if crude keeps falling
+- "Most hated rally" narrative = many are underinvested; pullbacks likely shallow but chase entries are dangerous
+- No VIX reading — confirm at open Mon (if VIX <15, full conviction; >18, trim size)
 
 ## Recent Themes
-- None logged yet — first planning session. Build theme tracking from this week forward.
+- **Software rebound** — best week in ~25 years (per Yahoo 4/18). Thematic alpha.
+- **Breadth leadership by small caps** — rare and bullish while it lasts
+- **Energy weakness** — avoid long; potential short/avoid theme
+- **Magnificent 7 concentration** — market narrative questioning if AI names still carry; NVDA/AVGO held up Friday
 
 ## Process Notes
-- No open positions → no position-management risk today.
-- Strategy guardrails: 5% standard size, 10% max; 50% starter, add on confirmation.
-- Do NOT force a trade Monday. If setups don't confirm, sit out.
+- No open positions → no management risk
+- Use 50% starter size on all entries; add on confirmation only
+- Max 2 concurrent entries Monday; don't spread thin
+- If SPY gaps down >0.5% Monday, stand down and wait for reclaim
 
 ## Weekly Review
-See weekly_reviews/ directory for historical reviews.
+See weekly_reviews/ directory.
