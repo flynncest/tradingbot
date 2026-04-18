@@ -1,0 +1,41 @@
+name: Midday (12:00 PM ET)
+
+on:
+  schedule:
+    - cron: '0 16 * * 1-5'   # 16:00 UTC = 12:00 PM ET (EDT). Change to '0 17' in winter (EST).
+  workflow_dispatch:
+
+concurrency:
+  group: tradingbot
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+          cache: pip
+
+      - run: pip install -r requirements.txt
+
+      - name: Run midday routine
+        run: python main.py midday
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
+          ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+          ALPACA_PAPER: ${{ secrets.ALPACA_PAPER }}
+
+      - name: Commit memory updates
+        run: |
+          git config user.name "TradingBot"
+          git config user.email "bot@tradingbot.local"
+          git add memory/
+          git diff --staged --quiet || git commit -m "midday: $(date -u +'%Y-%m-%d')"
+          git push
