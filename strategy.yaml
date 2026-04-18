@@ -1,0 +1,25 @@
+guardrails:
+  max_position_size_pct: 0.10      # Max 10% of portfolio per position
+  max_daily_loss_pct: 0.02         # Halt trading if down 2% on the day
+  trailing_stop_pct: 5.0           # Default 5% trailing stop
+  max_positions: 5                 # Max concurrent open positions
+  min_market_cap_billion: 1.0      # Only trade stocks >= $1B market cap
+  loss_cut_threshold_pct: 8.0      # Close individual position at -8%
+  tighten_stop_at_profit_pct: 5.0  # Tighten stop when up 5%+
+
+universe:
+  sectors:
+    - Technology
+    - Healthcare
+    - Consumer Discretionary
+  exclude_symbols:
+    - UVXY
+    - SQQQ
+    - SPXS
+
+schedule_et:
+  pre_market: "06:00"
+  market_open: "08:30"
+  midday: "12:00"
+  end_of_day: "15:00"
+  weekly_review: "16:00"  # Fridays only

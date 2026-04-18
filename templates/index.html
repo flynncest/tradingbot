@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TradingBot</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <style>
+    body { background:#0a0e1a; font-family:'SF Mono',ui-monospace,monospace; }
+    .card { background:#111827; border:1px solid #1f2937; border-radius:10px; }
+    .stat-up   { color:#34d399; }
+    .stat-down { color:#f87171; }
+    .stat-flat { color:#9ca3af; }
+    .badge-run { background:#064e3b; color:#34d399; }
+    .badge-idle{ background:#1f2937; color:#6b7280; }
+    #log-box { height:220px; overflow-y:auto; background:#050810; border-radius:8px; }
+    #log-box::-webkit-scrollbar { width:4px; }
+    #log-box::-webkit-scrollbar-thumb { background:#374151; border-radius:2px; }
+    .log-INFO  { color:#60a5fa; }
+    .log-WARNING { color:#fbbf24; }
+    .log-ERROR { color:#f87171; }
+    .log-DEBUG { color:#4b5563; }
+    .tab-btn.active { background:#1d4ed8; color:#fff; }
+    .tab-btn { background:#1f2937; color:#9ca3af; border-radius:6px; cursor:pointer; }
+    .tab-btn:hover { background:#374151; color:#e5e7eb; }
+    .prose-dark h1,h2,h3 { color:#e5e7eb; margin:0.75rem 0 0.25rem; font-size:0.9rem; font-weight:700; }
+    .prose-dark p,li { color:#9ca3af; font-size:0.78rem; line-height:1.6; }
+    .prose-dark table { width:100%; font-size:0.75rem; border-collapse:collapse; }
+    .prose-dark td,th { border:1px solid #1f2937; padding:4px 8px; color:#9ca3af; }
+    .prose-dark th { color:#e5e7eb; background:#1f2937; }
+    #md-content { overflow-y:auto; max-height:340px; }
+    #md-content::-webkit-scrollbar { width:4px; }
+    #md-content::-webkit-scrollbar-thumb { background:#374151; border-radius:2px; }
+    .pulse { animation: pulse 2s cubic-bezier(0.4,0,0.6,1) infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+  </style>
+</head>
+<body class="text-gray-100 min-h-screen">
+
+  <!-- ── Header ───────────────────────────────── -->
+  <header class="flex items-center justify-between px-6 py-3 border-b border-gray-800" style="background:#0d1117">
+    <div class="flex items-center gap-3">
+      <div id="status-dot" class="w-2.5 h-2.5 rounded-full bg-green-400 pulse"></div>
+      <span class="text-base font-bold tracking-tight">TradingBot</span>
+      <span class="text-xs text-gray-500 ml-1">paper</span>
+    </div>
+    <div class="flex items-center gap-6 text-xs text-gray-500">
+      <span id="clock">—</span>
+      <span id="market-status" class="font-semibold">—</span>
+    </div>
+  </header>
+
+  <!-- ── Stats bar ─────────────────────────────── -->
+  <div class="grid grid-cols-4 gap-px border-b border-gray-800" style="background:#1f2937">
+    <div class="px-6 py-4" style="background:#0d1117">
+      <div class="text-xs text-gray-500 uppercase tracking-widest mb-1">Portfolio</div>
+      <div id="equity" class="text-2xl font-bold">—</div>
+    </div>
+    <div class="px-6 py-4" style="background:#0d1117">
+      <div class="text-xs text-gray-500 uppercase tracking-widest mb-1">Cash</div>
+      <div id="cash" class="text-2xl font-bold">—</div>
+    </div>
+    <div class="px-6 py-4" style="background:#0d1117">
+      <div class="text-xs text-gray-500 uppercase tracking-widest mb-1">Day P&amp;L</div>
+      <div id="daypnl" class="text-2xl font-bold">—</div>
+    </div>
+    <div class="px-6 py-4" style="background:#0d1117">
+      <div class="text-xs text-gray-500 uppercase tracking-widest mb-1">Positions</div>
+      <div id="pos-count" class="text-2xl font-bold">—</div>
+    </div>
+  </div>
+
+  <!-- ── Main grid ─────────────────────────────── -->
+  <div class="grid grid-cols-12 gap-4 p-4">
+
+    <!-- Left sidebar -->
+    <div class="col-span-3 flex flex-col gap-4">
+
+      <!-- Schedule -->
+      <div class="card p-4">
+        <div class="text-xs text-gray-500 uppercase tracking-widest mb-3">Schedule</div>
+        <div id="schedule-list" class="flex flex-col gap-2"></div>
+      </div>
+
+      <!-- Quick actions -->
+      <div class="card p-4">
+        <div class="text-xs text-gray-500 uppercase tracking-widest mb-3">Run Now</div>
+        <div class="flex flex-col gap-2">
+          <button onclick="runRoutine('pre_market')"    class="run-btn text-xs py-2 px-3 rounded text-left bg-gray-800 hover:bg-blue-900 transition-colors">Pre-market</button>
+          <button onclick="runRoutine('market_open')"   class="run-btn text-xs py-2 px-3 rounded text-left bg-gray-800 hover:bg-blue-900 transition-colors">Market Open</button>
+          <button onclick="runRoutine('midday')"        class="run-btn text-xs py-2 px-3 rounded text-left bg-gray-800 hover:bg-blue-900 transition-colors">Midday</button>
+          <button onclick="runRoutine('end_of_day')"    class="run-btn text-xs py-2 px-3 rounded text-left bg-gray-800 hover:bg-blue-900 transition-colors">End of Day</button>
+          <button onclick="runRoutine('weekly_review')" class="run-btn text-xs py-2 px-3 rounded text-left bg-gray-800 hover:bg-blue-900 transition-colors">Weekly Review</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Right main area -->
+    <div class="col-span-9 flex flex-col gap-4">
+
+      <!-- Positions table -->
+      <div class="card p-4">
+        <div class="text-xs text-gray-500 uppercase tracking-widest mb-3">Open Positions</div>
+        <div id="positions-table">
+          <div class="text-sm text-gray-600 py-4 text-center">Loading…</div>
+        </div>
+      </div>
+
+      <!-- Memory tabs -->
+      <div class="card p-4">
+        <div class="flex items-center gap-2 mb-4">
+          <button class="tab-btn active px-3 py-1.5 text-xs" onclick="switchTab('research')">Research Log</button>
+          <button class="tab-btn px-3 py-1.5 text-xs"        onclick="switchTab('trade')">Trade Log</button>
+          <button class="tab-btn px-3 py-1.5 text-xs"        onclick="switchTab('strategy')">Strategy</button>
+          <div class="ml-auto">
+            <button onclick="reloadMemory()" class="text-xs text-gray-600 hover:text-gray-300 transition-colors">↻ reload</button>
+          </div>
+        </div>
+        <div id="md-content" class="prose-dark px-1"></div>
+      </div>
+
+      <!-- Live logs -->
+      <div class="card p-4">
+        <div class="flex items-center justify-between mb-3">
+          <div class="text-xs text-gray-500 uppercase tracking-widest">Live Logs</div>
+          <button onclick="clearLogs()" class="text-xs text-gray-600 hover:text-gray-300 transition-colors">clear</button>
+        </div>
+        <div id="log-box" class="p-3 text-xs leading-relaxed"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    let activeTab = 'research';
+    let localLogs = [];
+
+    const TAB_FILES = {
+      research: 'research_log.md',
+      trade:    'trade_log.md',
+      strategy: 'strategy.md',
+    };
+
+    // ── Clock ────────────────────────────────────
+    function updateClock() {
+      const now = new Date();
+      const et  = new Intl.DateTimeFormat('en-US', {
+        timeZone: 'America/New_York', hour:'2-digit', minute:'2-digit', second:'2-digit',
+        hour12: false, weekday:'short', month:'short', day:'numeric'
+      }).format(now);
+      document.getElementById('clock').textContent = et + ' ET';
+
+      // Market status
+      const etNow = new Date(now.toLocaleString('en-US', {timeZone:'America/New_York'}));
+      const day   = etNow.getDay();
+      const h     = etNow.getHours(), m = etNow.getMinutes();
+      const mins  = h * 60 + m;
+      const el    = document.getElementById('market-status');
+      if (day === 0 || day === 6) {
+        el.textContent = 'Market Closed'; el.className = 'font-semibold text-gray-500';
+      } else if (mins >= 570 && mins < 960) {  // 9:30–16:00
+        el.textContent = '● Market Open'; el.className = 'font-semibold text-green-400';
+      } else if (mins >= 480 && mins < 570) {
+        el.textContent = '◌ Pre-market'; el.className = 'font-semibold text-yellow-400';
+      } else {
+        el.textContent = 'Market Closed'; el.className = 'font-semibold text-gray-500';
+      }
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // ── Account ──────────────────────────────────
+    async function fetchAccount() {
+      try {
+        const r = await fetch('/api/account');
+        const j = await r.json();
+        if (!j.ok) return;
+        const d = j.data;
+        const equity = parseFloat(d.portfolio_value || d.equity);
+        const cash   = parseFloat(d.cash);
+        document.getElementById('equity').textContent = '$' + equity.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
+        document.getElementById('cash').textContent   = '$' + cash.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
+      } catch(e) {}
+    }
+
+    // ── Positions ────────────────────────────────
+    async function fetchPositions() {
+      try {
+        const r = await fetch('/api/positions');
+        const j = await r.json();
+        const positions = j.data || [];
+        document.getElementById('pos-count').textContent = positions.length;
+
+        const el = document.getElementById('positions-table');
+        if (!positions.length) {
+          el.innerHTML = '<div class="text-sm text-gray-600 py-4 text-center">No open positions</div>';
+          document.getElementById('daypnl').textContent = '$0.00';
+          document.getElementById('daypnl').className = 'text-2xl font-bold stat-flat';
+          return;
+        }
+
+        let totalPL = 0;
+        let rows = positions.map(p => {
+          const pl = parseFloat(p.unrealized_pl);
+          totalPL += pl;
+          const cls = pl >= 0 ? 'stat-up' : 'stat-down';
+          const sign = pl >= 0 ? '+' : '';
+          return `<tr class="border-t border-gray-800 hover:bg-gray-800/30">
+            <td class="py-2 px-3 font-bold">${p.symbol}</td>
+            <td class="py-2 px-3 text-gray-400">${p.qty}</td>
+            <td class="py-2 px-3 text-gray-400">$${parseFloat(p.avg_entry_price).toFixed(2)}</td>
+            <td class="py-2 px-3">$${parseFloat(p.current_price).toFixed(2)}</td>
+            <td class="py-2 px-3 ${cls}">${sign}$${pl.toFixed(2)}</td>
+            <td class="py-2 px-3 ${cls}">${sign}${p.unrealized_plpc}</td>
+            <td class="py-2 px-3 text-gray-400">$${parseFloat(p.market_value).toFixed(2)}</td>
+          </tr>`;
+        }).join('');
+
+        el.innerHTML = `<table class="w-full text-xs">
+          <thead><tr class="text-gray-500">
+            <th class="py-2 px-3 text-left">Symbol</th>
+            <th class="py-2 px-3 text-left">Qty</th>
+            <th class="py-2 px-3 text-left">Avg Entry</th>
+            <th class="py-2 px-3 text-left">Price</th>
+            <th class="py-2 px-3 text-left">Unreal P&L</th>
+            <th class="py-2 px-3 text-left">%</th>
+            <th class="py-2 px-3 text-left">Mkt Value</th>
+          </tr></thead>
+          <tbody>${rows}</tbody>
+        </table>`;
+
+        const plEl = document.getElementById('daypnl');
+        plEl.textContent = (totalPL >= 0 ? '+$' : '-$') + Math.abs(totalPL).toFixed(2);
+        plEl.className   = 'text-2xl font-bold ' + (totalPL >= 0 ? 'stat-up' : 'stat-down');
+      } catch(e) {}
+    }
+
+    // ── Schedule ─────────────────────────────────
+    async function fetchSchedule() {
+      try {
+        const r = await fetch('/api/schedule');
+        const j = await r.json();
+        const el = document.getElementById('schedule-list');
+        el.innerHTML = j.routines.map(rt => `
+          <div class="flex items-center justify-between py-1.5">
+            <div>
+              <div class="text-xs font-medium capitalize">${rt.id.replace('_',' ')}</div>
+              <div class="text-xs text-gray-600">${rt.label}</div>
+            </div>
+            <span class="text-xs px-2 py-0.5 rounded-full ${rt.running ? 'badge-run pulse' : 'badge-idle'}">
+              ${rt.running ? 'running' : 'idle'}
+            </span>
+          </div>`).join('');
+      } catch(e) {}
+    }
+
+    // ── Memory tabs ──────────────────────────────
+    async function loadMemory(tab) {
+      const filename = TAB_FILES[tab];
+      const el = document.getElementById('md-content');
+      el.innerHTML = '<div class="text-xs text-gray-600 py-4">Loading…</div>';
+      try {
+        const r = await fetch('/api/memory/' + filename);
+        const j = await r.json();
+        el.innerHTML = marked.parse(j.content || '_Empty_');
+      } catch(e) {
+        el.innerHTML = '<div class="text-xs text-red-400">Failed to load</div>';
+      }
+    }
+
+    function switchTab(tab) {
+      activeTab = tab;
+      document.querySelectorAll('.tab-btn').forEach((b, i) => {
+        const tabs = ['research','trade','strategy'];
+        b.classList.toggle('active', tabs[i] === tab);
+      });
+      loadMemory(tab);
+    }
+
+    function reloadMemory() { loadMemory(activeTab); }
+
+    // ── Logs ─────────────────────────────────────
+    let lastLogCount = 0;
+    async function fetchLogs() {
+      try {
+        const r = await fetch('/api/logs');
+        const j = await r.json();
+        const all = j.logs || [];
+        if (all.length === lastLogCount) return;
+        lastLogCount = all.length;
+
+        const el = document.getElementById('log-box');
+        const atBottom = el.scrollHeight - el.clientHeight <= el.scrollTop + 10;
+        el.innerHTML = all.map(l => {
+          const cls = 'log-' + l.lvl;
+          return `<div><span class="text-gray-600">${l.t}</span> <span class="${cls} font-semibold">[${l.lvl.slice(0,4)}]</span> <span class="text-gray-500">${l.name}</span> ${escHtml(l.msg)}</div>`;
+        }).join('');
+        if (atBottom) el.scrollTop = el.scrollHeight;
+      } catch(e) {}
+    }
+
+    function clearLogs() {
+      document.getElementById('log-box').innerHTML = '';
+      lastLogCount = 0;
+    }
+
+    function escHtml(s) {
+      return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    // ── Run routine ──────────────────────────────
+    async function runRoutine(name) {
+      const btn = [...document.querySelectorAll('.run-btn')].find(b => b.onclick?.toString().includes(name));
+      if (btn) { btn.disabled = true; btn.style.opacity = '0.5'; }
+      try {
+        await fetch('/api/run/' + name, {method:'POST'});
+      } catch(e) {}
+      setTimeout(() => {
+        if (btn) { btn.disabled = false; btn.style.opacity = '1'; }
+      }, 3000);
+    }
+
+    // ── Poll ─────────────────────────────────────
+    fetchAccount();
+    fetchPositions();
+    fetchSchedule();
+    fetchLogs();
+    loadMemory('research');
+
+    setInterval(fetchAccount,   15000);
+    setInterval(fetchPositions, 10000);
+    setInterval(fetchSchedule,   3000);
+    setInterval(fetchLogs,       2000);
+  </script>
+</body>
+</html>
