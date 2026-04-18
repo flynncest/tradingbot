@@ -1,5 +1,10 @@
 {
+  "framework": null,
+  "outputDirectory": "public",
   "rewrites": [
-    { "source": "/", "destination": "/public/index.html" }
+    { "source": "/api/account",   "destination": "/api/account.js" },
+    { "source": "/api/positions", "destination": "/api/positions.js" },
+    { "source": "/api/trigger",   "destination": "/api/trigger.js" },
+    { "source": "/(.*)",          "destination": "/index.html" }
   ]
 }
