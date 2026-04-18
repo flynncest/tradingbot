@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TradingBot</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <style>
+    body { background:#0a0e1a; font-family:'SF Mono',ui-monospace,monospace; }
+    .card { background:#111827; border:1px solid #1f2937; border-radius:10px; }
+    .up   { color:#34d399; }
+    .down { color:#f87171; }
+    .flat { color:#9ca3af; }
+    .badge-run  { background:#064e3b; color:#34d399; }
+    .badge-ok   { background:#1e3a5f; color:#60a5fa; }
+    .badge-idle { background:#1f2937; color:#6b7280; }
+    .tab-btn { background:#1f2937; color:#9ca3af; border-radius:6px; cursor:pointer; transition:all .15s; }
+    .tab-btn:hover { background:#374151; color:#e5e7eb; }
+    .tab-btn.active { background:#1d4ed8; color:#fff; }
+    #md-box { overflow-y:auto; max-height:360px; }
+    #md-box::-webkit-scrollbar { width:4px; }
+    #md-box::-webkit-scrollbar-thumb { background:#374151; border-radius:2px; }
+    .prose h1,.prose h2,.prose h3 { color:#e5e7eb; margin:.6rem 0 .2rem; font-size:.85rem; font-weight:700; }
+    .prose p,.prose li { color:#9ca3af; font-size:.78rem; line-height:1.6; }
+    .prose table { width:100%; font-size:.75rem; border-collapse:collapse; }
+    .prose td,.prose th { border:1px solid #1f2937; padding:3px 8px; color:#9ca3af; }
+    .prose th { color:#e5e7eb; background:#1f2937; }
+    .prose code { background:#1f2937; padding:1px 4px; border-radius:3px; color:#a5b4fc; font-size:.75rem; }
+    .run-row { display:flex; align-items:center; justify-content:space-between; padding:.4rem 0; border-bottom:1px solid #1f2937; }
+    .run-row:last-child { border:none; }
+    .pulse { animation:pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1}50%{opacity:.3} }
+  </style>
+</head>
+<body class="text-gray-100 min-h-screen">
+
+<!-- Header -->
+<header class="flex items-center justify-between px-6 py-3 border-b border-gray-800" style="background:#0d1117">
+  <div class="flex items-center gap-3">
+    <div class="w-2.5 h-2.5 rounded-full bg-green-400 pulse"></div>
+    <span class="font-bold tracking-tight">TradingBot</span>
+    <span class="text-xs text-gray-600">paper</span>
+  </div>
+  <div class="flex items-center gap-5 text-xs text-gray-500">
+    <span id="clock"></span>
+    <span id="mkt-status" class="font-semibold"></span>
+  </div>
+</header>
+
+<!-- Stats -->
+<div class="grid grid-cols-4 gap-px border-b border-gray-800" style="background:#1f2937">
+  <div class="px-6 py-4" style="background:#0d1117">
+    <div class="text-xs text-gray-500 uppercase tracking-widest mb-1">Portfolio</div>
+    <div id="equity" class="text-2xl font-bold">—</div>
+  </div>
+  <div class="px-6 py-4" style="background:#0d1117">
+    <div class="text-xs text-gray-500 uppercase tracking-widest mb-1">Cash</div>
+    <div id="cash" class="text-2xl font-bold">—</div>
+  </div>
+  <div class="px-6 py-4" style="background:#0d1117">
+    <div class="text-xs text-gray-500 uppercase tracking-widest mb-1">Unrealized P&amp;L</div>
+    <div id="pnl" class="text-2xl font-bold">—</div>
+  </div>
+  <div class="px-6 py-4" style="background:#0d1117">
+    <div class="text-xs text-gray-500 uppercase tracking-widest mb-1">Positions</div>
+    <div id="pos-count" class="text-2xl font-bold">—</div>
+  </div>
+</div>
+
+<!-- Main grid -->
+<div class="grid grid-cols-12 gap-4 p-4">
+
+  <!-- Left sidebar -->
+  <div class="col-span-3 flex flex-col gap-4">
+
+    <!-- Recent runs -->
+    <div class="card p-4">
+      <div class="text-xs text-gray-500 uppercase tracking-widest mb-3">Recent Runs</div>
+      <div id="runs-list"><div class="text-xs text-gray-600">Loading…</div></div>
+    </div>
+
+    <!-- Run now -->
+    <div class="card p-4">
+      <div class="text-xs text-gray-500 uppercase tracking-widest mb-3">Run Now</div>
+      <div class="flex flex-col gap-2">
+        <button onclick="trigger('pre_market')"    class="run-btn text-xs py-2 px-3 rounded text-left bg-gray-800 hover:bg-blue-900 transition-colors">Pre-market</button>
+        <button onclick="trigger('market_open')"   class="run-btn text-xs py-2 px-3 rounded text-left bg-gray-800 hover:bg-blue-900 transition-colors">Market Open</button>
+        <button onclick="trigger('midday')"        class="run-btn text-xs py-2 px-3 rounded text-left bg-gray-800 hover:bg-blue-900 transition-colors">Midday</button>
+        <button onclick="trigger('end_of_day')"    class="run-btn text-xs py-2 px-3 rounded text-left bg-gray-800 hover:bg-blue-900 transition-colors">End of Day</button>
+        <button onclick="trigger('weekly_review')" class="run-btn text-xs py-2 px-3 rounded text-left bg-gray-800 hover:bg-blue-900 transition-colors">Weekly Review</button>
+      </div>
+      <div id="trigger-msg" class="text-xs mt-2 text-green-400 hidden"></div>
+    </div>
+
+  </div>
+
+  <!-- Right area -->
+  <div class="col-span-9 flex flex-col gap-4">
+
+    <!-- Positions -->
+    <div class="card p-4">
+      <div class="text-xs text-gray-500 uppercase tracking-widest mb-3">Open Positions</div>
+      <div id="positions-table"><div class="text-sm text-gray-600 py-3 text-center">Loading…</div></div>
+    </div>
+
+    <!-- Memory tabs -->
+    <div class="card p-4">
+      <div class="flex items-center gap-2 mb-4">
+        <button class="tab-btn active px-3 py-1.5 text-xs" onclick="switchTab('research_log')">Research Log</button>
+        <button class="tab-btn px-3 py-1.5 text-xs"        onclick="switchTab('trade_log')">Trade Log</button>
+        <button class="tab-btn px-3 py-1.5 text-xs"        onclick="switchTab('lessons')">Lessons</button>
+        <button class="tab-btn px-3 py-1.5 text-xs"        onclick="switchTab('strategy')">Strategy</button>
+        <button onclick="reloadTab()" class="ml-auto text-xs text-gray-600 hover:text-gray-300 transition-colors">↻</button>
+      </div>
+      <div id="md-box" class="prose px-1"></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const REPO = 'flynncest/tradingbot';
+const RAW  = `https://raw.githubusercontent.com/${REPO}/main/memory`;
+const GH   = `https://api.github.com/repos/${REPO}`;
+let activeTab = 'research_log';
+
+// ── Clock ────────────────────────────────────────────────────────
+function tick() {
+  const now = new Date();
+  document.getElementById('clock').textContent =
+    new Intl.DateTimeFormat('en-US', {
+      timeZone:'America/New_York', hour:'2-digit', minute:'2-digit',
+      second:'2-digit', hour12:false, weekday:'short', month:'short', day:'numeric'
+    }).format(now) + ' ET';
+
+  const et  = new Date(now.toLocaleString('en-US', {timeZone:'America/New_York'}));
+  const day = et.getDay(), m = et.getHours()*60 + et.getMinutes();
+  const el  = document.getElementById('mkt-status');
+  if (day===0||day===6)        { el.textContent='Market Closed'; el.className='font-semibold text-gray-500'; }
+  else if (m>=570 && m<960)    { el.textContent='● Market Open'; el.className='font-semibold text-green-400'; }
+  else if (m>=480 && m<570)    { el.textContent='◌ Pre-market';  el.className='font-semibold text-yellow-400'; }
+  else                          { el.textContent='Market Closed'; el.className='font-semibold text-gray-500'; }
+}
+setInterval(tick, 1000); tick();
+
+// ── Account ──────────────────────────────────────────────────────
+async function fetchAccount() {
+  try {
+    const j = await fetch('/api/account').then(r=>r.json());
+    if (!j.ok) return;
+    document.getElementById('equity').textContent = '$' + fmt(j.portfolio_value||j.equity);
+    document.getElementById('cash').textContent   = '$' + fmt(j.cash);
+  } catch(e) {}
+}
+
+// ── Positions ────────────────────────────────────────────────────
+async function fetchPositions() {
+  try {
+    const j = await fetch('/api/positions').then(r=>r.json());
+    const ps = j.positions || [];
+    document.getElementById('pos-count').textContent = ps.length;
+
+    let totalPL = 0;
+    const el = document.getElementById('positions-table');
+    if (!ps.length) {
+      el.innerHTML = '<div class="text-sm text-gray-600 py-3 text-center">No open positions</div>';
+      setpnl(0); return;
+    }
+    const rows = ps.map(p => {
+      const pl = parseFloat(p.unrealized_pl); totalPL += pl;
+      const cls = pl>=0?'up':'down', sign=pl>=0?'+':'';
+      return `<tr class="border-t border-gray-800 hover:bg-gray-800/30 text-xs">
+        <td class="py-2 px-3 font-bold">${p.symbol}</td>
+        <td class="py-2 px-3 text-gray-400">${p.qty}</td>
+        <td class="py-2 px-3 text-gray-400">$${parseFloat(p.avg_entry_price).toFixed(2)}</td>
+        <td class="py-2 px-3">$${parseFloat(p.current_price).toFixed(2)}</td>
+        <td class="py-2 px-3 ${cls}">${sign}$${Math.abs(pl).toFixed(2)}</td>
+        <td class="py-2 px-3 ${cls}">${p.unrealized_plpc}</td>
+        <td class="py-2 px-3 text-gray-400">$${parseFloat(p.market_value).toFixed(2)}</td>
+      </tr>`;
+    }).join('');
+    el.innerHTML = `<table class="w-full"><thead><tr class="text-xs text-gray-500">
+      <th class="py-2 px-3 text-left">Symbol</th><th class="py-2 px-3 text-left">Qty</th>
+      <th class="py-2 px-3 text-left">Entry</th><th class="py-2 px-3 text-left">Price</th>
+      <th class="py-2 px-3 text-left">P&L</th><th class="py-2 px-3 text-left">%</th>
+      <th class="py-2 px-3 text-left">Value</th>
+    </tr></thead><tbody>${rows}</tbody></table>`;
+    setpnl(totalPL);
+  } catch(e) {}
+}
+
+function setpnl(v) {
+  const el = document.getElementById('pnl');
+  el.textContent = (v>=0?'+$':'-$') + Math.abs(v).toFixed(2);
+  el.className   = 'text-2xl font-bold ' + (v>0?'up':v<0?'down':'flat');
+}
+
+// ── GitHub Actions runs ───────────────────────────────────────────
+async function fetchRuns() {
+  try {
+    const j = await fetch(`${GH}/actions/runs?per_page=8`).then(r=>r.json());
+    const runs = j.workflow_runs || [];
+    const el = document.getElementById('runs-list');
+    if (!runs.length) { el.innerHTML='<div class="text-xs text-gray-600">No runs yet</div>'; return; }
+    el.innerHTML = runs.map(r => {
+      const wf   = r.name.replace(' (6:00 AM ET)','').replace(' (8:30 AM ET)','')
+                         .replace(' (12:00 PM ET)','').replace(' (3:00 PM ET)','')
+                         .replace(' (4:00 PM ET Friday)','');
+      const ago  = timeAgo(r.updated_at);
+      const cls  = r.conclusion==='success'?'badge-ok':r.status==='in_progress'?'badge-run':'badge-idle';
+      const icon = r.conclusion==='success'?'✓':r.status==='in_progress'?'◌':'✗';
+      return `<div class="run-row">
+        <div>
+          <div class="text-xs font-medium">${wf}</div>
+          <div class="text-xs text-gray-600">${ago}</div>
+        </div>
+        <span class="text-xs px-2 py-0.5 rounded-full ${cls}">${icon}</span>
+      </div>`;
+    }).join('');
+  } catch(e) {}
+}
+
+// ── Memory tabs ───────────────────────────────────────────────────
+const TAB_FILES = {
+  research_log: 'research_log.md',
+  trade_log:    'trade_log.md',
+  lessons:      'lessons.md',
+  strategy:     'strategy.md',
+};
+
+async function loadTab(tab) {
+  const el = document.getElementById('md-box');
+  el.innerHTML = '<div class="text-xs text-gray-600 py-4">Loading…</div>';
+  try {
+    const url = `${RAW}/${TAB_FILES[tab]}?t=${Date.now()}`;
+    const text = await fetch(url).then(r=>r.text());
+    el.innerHTML = marked.parse(text);
+  } catch(e) {
+    el.innerHTML = '<div class="text-xs text-red-400">Failed to load</div>';
+  }
+}
+
+function switchTab(tab) {
+  activeTab = tab;
+  document.querySelectorAll('.tab-btn').forEach((b,i) => {
+    b.classList.toggle('active', ['research_log','trade_log','lessons','strategy'][i] === tab);
+  });
+  loadTab(tab);
+}
+function reloadTab() { loadTab(activeTab); }
+
+// ── Trigger ───────────────────────────────────────────────────────
+async function trigger(routine) {
+  const btns = document.querySelectorAll('.run-btn');
+  btns.forEach(b=>{ b.disabled=true; b.style.opacity='0.5'; });
+  const msg = document.getElementById('trigger-msg');
+  try {
+    const r = await fetch('/api/trigger', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({routine})
+    }).then(r=>r.json());
+    msg.textContent = r.ok ? `✓ ${routine} triggered — check Actions tab` : `✗ ${r.error}`;
+    msg.className   = `text-xs mt-2 ${r.ok?'text-green-400':'text-red-400'}`;
+    msg.classList.remove('hidden');
+    setTimeout(()=>msg.classList.add('hidden'), 5000);
+  } catch(e) {}
+  setTimeout(()=>{ btns.forEach(b=>{ b.disabled=false; b.style.opacity='1'; }); }, 3000);
+}
+
+// ── Helpers ───────────────────────────────────────────────────────
+function fmt(v) { return parseFloat(v).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+function timeAgo(iso) {
+  const s = Math.floor((Date.now()-new Date(iso))/1000);
+  if (s<60) return `${s}s ago`;
+  if (s<3600) return `${Math.floor(s/60)}m ago`;
+  if (s<86400) return `${Math.floor(s/3600)}h ago`;
+  return `${Math.floor(s/86400)}d ago`;
+}
+
+// ── Poll ──────────────────────────────────────────────────────────
+fetchAccount(); fetchPositions(); fetchRuns(); loadTab('research_log');
+setInterval(fetchAccount,   20000);
+setInterval(fetchPositions, 15000);
+setInterval(fetchRuns,       30000);
+</script>
+</body>
+</html>

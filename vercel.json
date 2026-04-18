@@ -1,0 +1,11 @@
+{
+  "functions": {
+    "api/*.py": { "runtime": "python3.12" }
+  },
+  "rewrites": [
+    { "source": "/api/account",   "destination": "/api/account" },
+    { "source": "/api/positions", "destination": "/api/positions" },
+    { "source": "/api/trigger",   "destination": "/api/trigger" },
+    { "source": "/",              "destination": "/public/index.html" }
+  ]
+}
