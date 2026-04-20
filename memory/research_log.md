@@ -82,3 +82,8 @@ Pre-market snapshots (vs Fri 4/17 close):
 - No open positions → no management risk
 - Pre-market flat means Fri levels are still the pivots
 - Do not chase; require breakout + volume confirmation
+
+
+## 2026-04-20 — Midday Observation
+- Unable to observe market regime: broker API returned "unauthorized" during scheduled midday review.
+- No position or account visibility. Operational issue logged in trade_log.md.
