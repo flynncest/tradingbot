@@ -56,3 +56,24 @@
   - 3% trailing stop on +5% winners
   - 2% account-wide daily drawdown halt
 - ACTION REQUIRED: restore Alpaca API credentials before next review cycle. Manually verify positions via broker UI in the interim.
+
+
+## 2026-04-21 — EOD Review: STILL UNAUTHORIZED (Day 2, session 3)
+- `get_account()` and `get_positions()` both returned `{"message": "unauthorized."}` again at EOD.
+- `get_market_snapshot("SPY")` succeeded — **public market data endpoints work; only authenticated endpoints fail.** This isolates the fault to credentials/permissions, not general API outage.
+- **SPY closed $704.15, -0.75%** (prev close $709.49). Today was a larger risk-off day than Monday (-0.31%). Two-day SPY drawdown ≈ -1.06%.
+- **Portfolio return today: UNKNOWN** (cannot read equity).
+- **Trades closed today: 0.** Trades opened today: 0.
+- **Open positions going into Wed 2026-04-22: UNKNOWN.** Reconciliation remains mandatory as the first action once auth is restored.
+- **Forfeited setups (Day 2):** NVDA $202.25 breakout, IWM $276.50 retest, IGV $85.15 reclaim — now stale; must re-evaluate against fresh prices once auth is restored.
+- **Ops status:** Credentials issue is confirmed (market-data-only endpoint works). This is **48 trading hours of unusable account access**. Escalation is beyond "retry later" — it now needs a credential rotation / support ticket outside this loop.
+
+### Performance Summary (as of 2026-04-21 EOD)
+- Total trades: 0
+- Win rate: —
+- Avg win: —
+- Avg loss: —
+- Total P&L: $0 (cannot verify, but no orders placed)
+- Days traded: 0
+- Days blocked by ops issues: **2** (2026-04-20, 2026-04-21)
+- Benchmark over blocked window: SPY -1.06% cumulative — we neither participated in downside nor had any hedge on (exposure unknown).

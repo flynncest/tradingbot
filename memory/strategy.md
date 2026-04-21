@@ -22,10 +22,20 @@ Momentum / swing trading with defined risk. Hold 1-5 days. Cut losers fast, let 
 
 ## Operational Guardrails
 # Added 2026-04-20 Monday: Lost a full trading day to Alpaca `unauthorized` errors across three routines. Standing down was correct; the process failure was not escalating auth problems until EOD.
+# Updated 2026-04-21 Tuesday: Day 2 of the same incident. Monday's rule flagged the issue correctly at open but we still ran redundant midday and EOD probes. Adding (a) diagnostic isolation step, (b) incident-mode suppression of further probes, (c) defined out-of-loop resolution path.
 
 - **Pre-market health check (MANDATORY before open routine):** call `get_account()` as the very first action. If it returns any auth error, STOP — do not proceed to market data or order logic. Log the incident and flag for credential rotation.
+
+- **Auth-failure diagnostic (NEW 2026-04-21):** On any `unauthorized` from an authenticated endpoint, immediately call one *public* endpoint (e.g., `get_market_snapshot("SPY")`) as a diagnostic. If the public call succeeds, the fault is isolated to **credentials/permissions** — not network, not outage. Record this diagnosis in the trade log and do not repeat the diagnostic later in the same incident.
+
 - **Auth-failure escalation rule:** A **second** consecutive `unauthorized` response in the same session is a P0 incident. Do not run a third identical retry hours later — that is wasted observation. Mark the day as an ops incident day in trade_log.md and notify immediately.
+
+- **Incident mode (NEW 2026-04-21):** Once an auth incident is confirmed (failure + public-endpoint diagnostic), the day switches to **incident mode**: suppress all further `get_account` / `get_positions` / `get_open_orders` / order-placement calls for the remainder of the session. Subsequent routines (midday, EOD) should log "incident still active — no new probes" rather than re-running the same failing calls. Only attempt to re-auth at the *next session's* pre-market health check, or after an explicit credential rotation.
+
+- **Resolution path (NEW 2026-04-21):** Flagging a P0 is not a fix. If auth remains broken at the end of a session, the next-session pre-market routine must assume credentials require **out-of-loop action** (rotate API keys, open broker support ticket, verify account status in broker UI) before any retry. More than 1 consecutive blocked trading day = mandatory credential rotation before continuing.
+
 - **Stand-down is correct (do not second-guess later):** When equity, positions, or open orders cannot be verified, guardrails (10% max size, max 5 positions, -2% daily loss halt) are not enforceable. Trading blind is strictly worse than missing a setup — a missed breakout costs opportunity; an unbounded position can cost the account. No trades under unverified state.
+
 - **Unknown-position recovery:** If a session ends without being able to read positions, the FIRST action next session is to reconcile holdings before any new entries or exits. Never layer new trades on top of an unknown book.
 
 ## Watchlist Notes
