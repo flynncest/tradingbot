@@ -33,3 +33,15 @@
 - **Trades closed today: 0** (no trades opened today either).
 - **Open positions going into Tue 2026-04-21: UNKNOWN — requires auth restoration before any new action.**
 - **Opportunity cost:** NVDA/IGV/IWM setups could not be acted on. Need to check Tue whether they triggered and what we missed.
+
+
+## 2026-04-21 (Tue) — Market Open Routine: STAND DOWN (Day 2 of ops incident)
+- **Action:** No trades placed.
+- **Reason:** Alpaca API `get_account()` and `get_positions()` both returned `{"message": "unauthorized."}` again at the open. This is Day 2 / session 4 consecutive of auth failure.
+- **Guardrail logic:** Cannot verify equity → cannot size 10% max position; cannot verify open positions → cannot check 5-max or layer risk; cannot verify today's P&L → cannot enforce -2% daily halt. Per strategy.md operational guardrails, never layer new trades on an unknown book. Per research_log.md rules of engagement for today, auth health check is mandatory before any order.
+- **Forfeited setups:**
+  - NVDA pivot $202.25 breakout (primary, pre 202.06) — Day 2 missed if it triggers
+  - IWM pullback to $276.50-277.00 retest (secondary, pre 277.35)
+  - IGV already extended — was WATCH only anyway
+- **Escalation:** P0 incident. If auth is not restored by EOD, escalate further — 2 trading days of forfeited opportunity and an unknown position book is a material risk.
+- **Next action:** Retry auth at midday. If restored, FIRST step is reconciliation (read positions + equity + open orders) before any new entry. Only then, re-evaluate NVDA/IWM setups against updated intraday prices.
