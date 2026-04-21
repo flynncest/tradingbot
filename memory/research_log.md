@@ -77,3 +77,8 @@ Pre-market snapshots (vs Mon 4/20 close):
 - Two consecutive flat-to-soft sessions at highs = coiled, not broken. Breakout today would be on day-3 base — typically higher-quality than day-1.
 - NVDA pivot unchanged means yesterday's missed opportunity is still actionable today. Good.
 - IGV opportunity was forfeited by the auth outage — lesson logged, move on.
+
+
+## 2026-04-21 — Midday Observation
+- Unable to observe market regime via positions today: Alpaca API returned unauthorized on all read endpoints.
+- No live data captured. Resume observations once credentials are restored.

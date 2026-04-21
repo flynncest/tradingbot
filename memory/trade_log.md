@@ -45,3 +45,14 @@
   - IGV already extended — was WATCH only anyway
 - **Escalation:** P0 incident. If auth is not restored by EOD, escalate further — 2 trading days of forfeited opportunity and an unknown position book is a material risk.
 - **Next action:** Retry auth at midday. If restored, FIRST step is reconciliation (read positions + equity + open orders) before any new entry. Only then, re-evaluate NVDA/IWM setups against updated intraday prices.
+
+
+## 2026-04-21 — Midday Review: FAILED (API Unauthorized)
+- Attempted midday position review routine.
+- `get_account`, `get_positions`, and `get_open_orders` all returned `{"message": "unauthorized."}`.
+- No actions taken: could not verify daily P&L, could not evaluate losers, could not tighten stops on winners.
+- Guardrails NOT enforced this cycle:
+  - 8% loss-cut threshold
+  - 3% trailing stop on +5% winners
+  - 2% account-wide daily drawdown halt
+- ACTION REQUIRED: restore Alpaca API credentials before next review cycle. Manually verify positions via broker UI in the interim.
