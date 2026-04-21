@@ -1,89 +1,79 @@
 # Research Log
 
-## Date: 2026-04-20 (Monday) — Pre-market plan
+## Date: 2026-04-21 (Tuesday) — Pre-market plan
 
-No open positions. Plan carried forward from 4/18 with Monday pre-market updates.
+## ⚠️ CRITICAL OPS STATE — UNRESOLVED FROM MONDAY
+- **Position book is STILL UNKNOWN** going into today's open. Per strategy.md Operational Guardrails: "The FIRST action next session is to reconcile holdings before any new entries or exits. Never layer new trades on top of an unknown book."
+- **MANDATORY before any order today:** run `get_account()` health check. If auth still fails, this is a P0 incident — do NOT trade. Mark Day 2 of ops incident.
+- Assume zero positions only if reconciliation confirms it. Until then, everything below is a PLAN, not an order list.
 
-## Market Regime — STILL RISK-ON but with new geopolitical overlay
-Pre-market snapshots (vs Fri 4/17 close):
-- **SPY 710.14 (-0.09% pre)** — holding record high zone, futures slightly soft
-- **QQQ 648.85 (flat pre)** — Nasdaq record levels, digesting
-- **IWM 275.78 (-0.06% pre)** — small-cap leadership intact at highs
-- **VIX** — data error again; infer modestly elevated given Iran headlines
-- Headline driver: **"Iran says no plans for new talks" → oil jumping, Dow futures down**
-- Positive offset: **Marvell surging on reported Google AI chip deal** → semis tailwind persists
-- AI trade narrative: "fueling records despite Iran war" (Yahoo) — theme intact
+## Market Regime — RISK-ON holding, geopolitical overlay persists
+Pre-market snapshots (vs Mon 4/20 close):
+- **SPY 708.72 (-0.11%)** — holding the 708 shelf / above 705 stand-down line. Record-zone digestion, not breakdown.
+- **QQQ 646.79 (-0.18%)** — mild soft pre, Nasdaq still near records
+- **IWM 277.35 (-0.13%)** — held Mon breakout above $276.50; RS still intact
+- **VIX** — data error again (3rd session). Infer elevated from Iran headlines but cannot confirm. If VIX >18 rule triggers, we'd be blind to it — be conservative on sizing.
+- **NVDA 202.06 (+0.17%)** — sitting right on the $202.25 pivot
+- **IGV 86.30 (-0.33%)** — already cleared $85.15 reclaim (ran Mon), now extended; chase risk
+- **ISRG 465.60 (-0.40%)** — reports tonight AMC; sell-side cutting PTs into print
 
-**Regime verdict:** Risk-on momentum still leading, but geopolitical wildcard now priced in. Require confirmation (SPY holding above 708, volume) before entries. If SPY gaps down >0.5% or breaks 705, stand down.
+**Headline tape:** "Oil pops, stocks slide on fading peace hopes" (Mon), Strait of Hormuz risk still live. Offset: "Tech rally may only be starting" (Yahoo). AI trade still leadership.
 
-## Today's Watchlist (Mon 2026-04-20)
+**Regime verdict:** Risk-on intact but NOT confirmed — SPY flat-to-down 2 days in a row at highs. Require volume + price confirmation on every entry. If SPY breaks 705 → STAND DOWN.
 
-### 1. ⭐ NVDA — PRIMARY HIGH-CONVICTION LONG
-- **Pre:** 201.68 (+0.36%)
-- **Catalyst:** Semis leadership reinforced today by MRVL/Google AI chip deal headline; AI-trade narrative insulating market from Iran noise
-- **Setup:** Breakout continuation above Fri high
-- **Entry:** Break above $202.25 on 2x avg volume confirmation (avg 177M). 50% starter size.
-- **Stop:** Hard -8% (~$186); trailing -5% from high once green
+## Today's Watchlist
+
+### 1. ⭐ NVDA — PRIMARY, still the cleanest setup
+- **Pre:** 202.06 (+0.17%) — sitting on the pivot
+- **Catalyst:** AI leadership theme intact; "tech rally may only be starting" narrative. Cerebras competitive noise is a known risk but not a thesis-killer.
+- **Setup:** Breakout continuation. Pivot $202.25 unchanged from yesterday.
+- **Entry:** Break & hold above $202.25 on 2x avg volume (avg 176M). 50% starter.
+- **Stop:** Hard -8% (~$186); trail -5% from high once green. Initial stop $198.50 on intraday failure.
 - **Target:** +10% partial (~$222), trail remainder
-- **Risk:** AI capex scare headline; Iran escalation risk-off day
+- **Conviction:** HIGH if volume confirms; LOW if it drifts through without volume (false breakout risk on day-2 of consolidation)
 
-### 2. ⭐ IGV — SECONDARY HIGH-CONVICTION LONG
-- **Pre:** 85.08 (-0.06%)
-- **Catalyst:** Best week in ~25 years for software; theme confirmed
-- **Setup:** Prefer pullback entry, NOT a chase after historic week
-- **Entry:** Only on reclaim of $85.15 after shallow pullback OR hold of rising 20DMA. 50% starter.
-- **Stop:** -8% hard (~$78.30)
-- **Target:** +10% partial (~$93.60)
-- **Risk:** Extension risk is real; discipline on entry price
-
-### 3. IWM — Breadth continuation
-- **Pre:** 275.78 (-0.06%)
-- **Catalyst:** Small-cap RS leadership = risk-on breadth confirmation
-- **Entry:** Above Fri high $276.50 with volume; 50% starter
-- **Stop:** -8% hard (~$253.70)
+### 2. IWM — SECONDARY, breadth continuation already triggered
+- **Pre:** 277.35 — already above Mon pivot $276.50
+- **Catalyst:** Small-cap RS confirmed risk-on breadth despite Iran tape
+- **Setup:** Pullback-to-pivot entry preferred now that breakout already printed
+- **Entry:** $276.50-277.00 retest hold (not a chase above $278). 50% starter.
+- **Stop:** -8% hard (~$255); intraday stop below $275
 - **Target:** +10% partial (~$303)
-- **Risk:** Small caps most rate/credit-sensitive; geopolitical risk-off would hit first
+- **Conviction:** MEDIUM — small caps most sensitive to any Iran/rate shock
 
-### 4. ISRG — WAIT, no pre-earnings hold
-- Reports Tue 4/21 AMC. DO NOT enter before print.
-- Plan: Wed 4/22 open — if gaps +5% on volume and pulls back, enter on gap-level reclaim.
+### 3. IGV — DOWNGRADE to WATCH only
+- **Pre:** 86.30 — ran past the $85.15 reclaim; no longer a pullback entry
+- **Action:** Do NOT chase. Re-add to watch only if it pulls back to $85.00-85.25 on light volume. Historic-best-week extension risk is real.
 
-### 5. XLE — WATCH only (thesis flip possible)
-- Friday -2.83%, but oil jumping today on Iran headlines. Could see dead-cat bounce.
-- Not a trade yet — need to see base/reclaim. Monitor for new setup.
+### 4. ISRG — DO NOT TRADE PRE-EARNINGS
+- Reports tonight AMC. Sell-side cutting PTs (Mizuho, BTIG, Evercore) into print — setup is asymmetric to the downside on guidance.
+- **Plan:** Wed 4/22 — only enter if gap +5% on volume, then pulls back and reclaims gap level. No pre-print holds (strategy rule).
+
+### 5. XLE — WATCH
+- Oil popped Mon on Iran. Still no basing structure. Wait.
 
 ## High-Conviction Focus (1-2 best)
-1. **NVDA** — cleanest semis breakout; MRVL/Google news reinforces theme
-2. **IGV** — patient pullback entry only
+1. **NVDA >$202.25 with volume** — the one to act on if regime confirms
+2. **IWM pullback to $276.50-277.00** — secondary, patient entry
 
 ## Key Risks / Events This Week
-- **Iran escalation** — new overlay today; oil up, futures soft. Watch 705 SPY line.
-- **TSLA earnings** this week — sentiment read for megacap tech
-- **ISRG earnings** Tue 4/21 AMC
-- **Q1 earnings season peak** — single-stock gap volatility high
-- Fed speaker headlines — check calendar
-- "Most hated rally" → shallow pullbacks expected but chasing is the #1 risk
+- **Iran / Strait of Hormuz escalation** — primary tape risk; SPY 705 is the line
+- **ISRG earnings** tonight AMC (not a trade, but sentiment marker for medtech)
+- **TSLA earnings** this week — megacap tech sentiment read
+- **Q1 earnings peak** — single-stock gap risk high
+- **VIX data broken** — flying without that instrument; reduce size if in doubt
+- **Ops risk: Day 2 of potential auth failure** — reconcile FIRST
 
 ## Today's Rules of Engagement
+- **Auth health check before ANY order** (strategy guardrail)
+- **Reconcile positions BEFORE any new entry** (strategy guardrail)
 - Max 2 concurrent entries
 - 50% starter size on all entries; add on confirmation only
-- If SPY gaps down >0.5% or breaks 705 → STAND DOWN, wait for reclaim
-- No pre-earnings holds (ISRG, TSLA)
-- VIX >18 → trim all sizing by half
-
-## Recent Themes
-- AI trade resilient vs Iran headlines (per Yahoo 4/19)
-- Software best week in ~25 years (extension risk)
-- Small-cap breadth leadership
-- Energy: crude now popping on Iran — reassess XLE on basing action
-- MRVL/Google deal = fresh semis catalyst
+- If SPY breaks 705 → STAND DOWN
+- No pre-earnings holds (ISRG tonight, TSLA later this week)
+- Given VIX unknown, default to conservative sizing (treat as if VIX >18: half sizing)
 
 ## Process Notes
-- No open positions → no management risk
-- Pre-market flat means Fri levels are still the pivots
-- Do not chase; require breakout + volume confirmation
-
-
-## 2026-04-20 — Midday Observation
-- Unable to observe market regime: broker API returned "unauthorized" during scheduled midday review.
-- No position or account visibility. Operational issue logged in trade_log.md.
+- Two consecutive flat-to-soft sessions at highs = coiled, not broken. Breakout today would be on day-3 base — typically higher-quality than day-1.
+- NVDA pivot unchanged means yesterday's missed opportunity is still actionable today. Good.
+- IGV opportunity was forfeited by the auth outage — lesson logged, move on.
