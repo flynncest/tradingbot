@@ -101,3 +101,10 @@
   4. Only then resume trading routine
 - **No ClickUp notification sent** (per instructions: notify only when trades are actually placed).
 - **Days blocked by ops issues: 3** (2026-04-20, 2026-04-21, 2026-04-22).
+
+
+## 2026-04-22 — Midday Review SKIPPED (API Auth Failure)
+- Attempted routine midday position review at user's request.
+- All Alpaca endpoints returned `unauthorized` (get_account, get_positions, get_open_orders).
+- No actions taken: could not verify daily loss limit, could not cut losers, could not tighten stops on winners.
+- **Action required from operator:** rotate/refresh Alpaca API keys and re-run the midday routine ASAP. Open positions are currently unmanaged with respect to the -8% cut rule and the +5% trailing-stop tightening rule.

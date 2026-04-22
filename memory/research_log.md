@@ -82,3 +82,7 @@ Pre-market snapshots:
 - Yesterday's secondary (IWM >$276.50) triggered intraday and failed — confirming the regime softened. Good that guardrails kept us out.
 - The auth outage, in hindsight, protected capital from two things: an IWM failed-breakout long, and exposure into today's further weakness. Stand-down continues to be the right call while ops are broken.
 - **New setup type logged:** Post-earnings positive-surprise into a risk-off tape (ISRG). Worth tracking as a repeatable pattern — beats during pullbacks tend to create better entries than beats at highs.
+
+
+## 2026-04-22 — Midday
+- Market regime observation: N/A — unable to access broker API (unauthorized). No positions or account data reviewable this session. Credentials issue suspected.
