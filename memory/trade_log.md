@@ -77,3 +77,27 @@
 - Days traded: 0
 - Days blocked by ops issues: **2** (2026-04-20, 2026-04-21)
 - Benchmark over blocked window: SPY -1.06% cumulative — we neither participated in downside nor had any hedge on (exposure unknown).
+
+
+## 2026-04-22 (Wed) — Market Open Routine: STAND DOWN (Day 3 of ops incident)
+- **Action:** No trades placed. No orders attempted.
+- **Reason:** Alpaca authenticated endpoints still returning `{"message": "unauthorized."}` at the open:
+  - `get_account()` → unauthorized
+  - `get_positions()` → unauthorized
+  - `get_open_orders()` → unauthorized
+- **Hard gate triggered:** Per strategy.md (2026-04-21 update) and today's research_log.md rules of engagement, >1 consecutive blocked trading day requires credential rotation out-of-loop BEFORE any further retry or order placement. This is Day 3 / session 7 of the outage. The gate is active.
+- **Guardrails that cannot be enforced without auth:**
+  - 10% max position size (no equity reading)
+  - 5-max concurrent positions (no position reading)
+  - -2% daily loss halt (no P&L reading)
+  - -8% hard cut per position (no entry/current price tracking for held names)
+  - 5% trailing stop placement (requires a filled entry)
+- **Regime context (market data still works):** SPY 704.08 pre, broke the 705 stand-down line from yesterday's plan. Per research_log today: "If SPY stays below 705 all session → STAND DOWN on all longs." Even if auth were restored, the regime rule would still demand extreme selectivity — only ISRG >$455 reclaim would have been live.
+- **Forfeited setups (Day 3):** ISRG reclaim $455 (post-earnings reversal, MEDIUM-HIGH conviction); SPY 705 reclaim scalp (LOW-MED). Both now untrackable without order capability.
+- **Escalation required (out-of-loop):**
+  1. Rotate Alpaca API keys
+  2. Verify account status and positions via broker UI directly
+  3. Confirm no stranded open orders or uncovered positions
+  4. Only then resume trading routine
+- **No ClickUp notification sent** (per instructions: notify only when trades are actually placed).
+- **Days blocked by ops issues: 3** (2026-04-20, 2026-04-21, 2026-04-22).
