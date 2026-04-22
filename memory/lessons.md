@@ -61,3 +61,28 @@ This file grows automatically. Every closed trade adds a lesson. Weekly review s
 ### Mistake Log — What to Avoid
 - **Redundant probing within a confirmed incident.** After the open-routine auth failure was confirmed a credentials issue, running the same `get_account` / `get_positions` at midday and again at EOD produced no new information. Process bug: the "escalation rule" added yesterday addressed *detection* but not *suppression* of further identical probes once the incident is active.
 - **Two-day forfeit without a path to resolution.** The escalation rule tells us to flag P0; it does not define what happens when flagging it doesn't fix it. We need a defined out-of-loop action (credential rotation, support ticket) — not just more logging.
+
+
+---
+
+## 2026-04-22 (Wed) — EOD Post-Mortem
+
+### Trade-level post-mortems
+**None.** Zero trades closed today. Zero trades opened today. This is Day 3 of a single ongoing ops incident. There is nothing to learn at the *trade* level because no trades exist to post-mortem.
+
+### Meta-level post-mortem (Day 3 of ops incident — the pattern is now the lesson)
+
+**[OPERATIONS] 3 CONSECUTIVE BLOCKED DAYS — Strategy rule was followed, but the rule itself is insufficient**
+- **Entry thesis:** N/A — routines called for ISRG $455 reclaim and SPY 705 reclaim scalp.
+- **What happened:** Auth endpoints still return `unauthorized` at open and at EOD. Public market data works. The open routine correctly stood down and entered incident mode per the 2026-04-21 strategy update. The midday routine (triggered by user) failed as expected and logged accordingly. SPY bounced +0.59% today — a setup we couldn't participate in because we have no verified book.
+- **Root cause of outcome:** The *trading* decisions have been correct every day. The *operational* decision — who rotates the API key and when — has **not** been executed. Strategy.md says "more than 1 consecutive blocked trading day = mandatory credential rotation before continuing," but the agent cannot rotate keys; only the human operator can. The rule exists, but the *handoff* to the operator is not forcing action.
+- **Lesson (specific and actionable):** **On Day 2+ of any auth outage, the pre-market routine must emit a single, explicit, high-urgency notification whose ONLY content is the out-of-loop action required ("ROTATE ALPACA API KEYS") — not a status report, not a market summary. A status update buried among market-data logs is easy to ignore; a single-purpose escalation alert is not.** Every additional log line we write about SPY prices while the account is dead dilutes the signal that the operator needs to act.
+- **Strategy impact:** YES — add a rule to Operational Guardrails: "Day 2+ of ops incident = single-line urgent notification at open, repeated at EOD, whose only message is the required out-of-loop action. No other content. Suppress routine EOD performance notifications until auth is restored (because there is no performance to report)."
+
+### Pattern Library — What Works
+- Re-confirmed (Day 3): **Incident-mode suppression worked as designed.** The open routine did not re-probe auth repeatedly today — it ran one check and stopped, per yesterday's rule. That rule is now validated across two independent sessions. Keep it.
+- Re-confirmed: **Standing down is still correct.** SPY +0.59% today would have been a good day to hold longs, but with no visibility into the book, "guess and hold" is indistinguishable from gambling. Zero action beats negative expectancy.
+
+### Mistake Log — What to Avoid
+- **Writing the same "still unauthorized" log entry three days in a row without changing the operator-facing signal.** Each day's trade log entry is longer and more detailed — but the *call to action* for the human (rotate the keys) has not been elevated in visibility. That is the mistake. Logging is not escalation.
+- **Treating each daily EOD as if it's a fresh review.** It is not. 2026-04-20, 2026-04-21, and 2026-04-22 are the *same incident*. Continuing to run full EOD routines (performance calc, benchmark comparison, notification) when no trades exist is process theater. The EOD review on Day 2+ of an outage should be reduced to: "incident still active, days blocked = N, required action = rotate keys, notify operator."

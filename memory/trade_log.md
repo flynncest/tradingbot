@@ -108,3 +108,23 @@
 - All Alpaca endpoints returned `unauthorized` (get_account, get_positions, get_open_orders).
 - No actions taken: could not verify daily loss limit, could not cut losers, could not tighten stops on winners.
 - **Action required from operator:** rotate/refresh Alpaca API keys and re-run the midday routine ASAP. Open positions are currently unmanaged with respect to the -8% cut rule and the +5% trailing-stop tightening rule.
+
+
+## 2026-04-22 — EOD Review: STILL UNAUTHORIZED (Day 3, session 9 of outage)
+- EOD auth retry (the only retry allowed this session per incident-mode rule): `get_account()` → `unauthorized`, `get_positions()` → `unauthorized`. Public endpoint `get_market_snapshot("SPY")` succeeded.
+- **SPY closed $711.18, +0.59%** (prev close $706.98). Today was a relief-rally / risk-on bounce after Tuesday's -0.75%. 3-day SPY path: Mon -0.31%, Tue -0.75%, Wed +0.59% — net ~-0.48% cumulative.
+- **Portfolio return today: UNKNOWN** (cannot read equity). **Benchmark (SPY): +0.59%.**
+- **Trades closed today: 0.** Trades opened today: 0. No post-mortem material at the trade level for the 3rd consecutive day.
+- **Open positions going into Thu 2026-04-23: UNKNOWN.** Reconciliation is still the mandatory first action once auth is restored.
+- **Forfeited setups (Day 3):** ISRG $455 reclaim (post-earnings), SPY 705 reclaim scalp. Both now reference-only — can't be acted on.
+- **Ops status:** Day 3 confirmed. Credentials remain broken. Per strategy.md "resolution path" rule, >1 blocked day mandates credential rotation out-of-loop before continuing. That has not happened yet — this is now the primary blocker to all trading activity, not any market condition.
+
+### Performance Summary (as of 2026-04-22 EOD)
+- Total trades: 0
+- Win rate: —
+- Avg win: —
+- Avg loss: —
+- Total P&L: $0 (cannot verify, but no orders placed — no way to open or close)
+- Days traded: 0
+- Days blocked by ops issues: **3** (2026-04-20, 2026-04-21, 2026-04-22)
+- Benchmark over blocked window: SPY cumulative ~-0.48% (Mon -0.31%, Tue -0.75%, Wed +0.59%). Missed: one real risk-off day (Tue) and one reversal bounce (Wed). Net result for a blind account: unknown but operationally the right choice was zero-action.
