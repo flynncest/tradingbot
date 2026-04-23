@@ -128,3 +128,26 @@
 - Days traded: 0
 - Days blocked by ops issues: **3** (2026-04-20, 2026-04-21, 2026-04-22)
 - Benchmark over blocked window: SPY cumulative ~-0.48% (Mon -0.31%, Tue -0.75%, Wed +0.59%). Missed: one real risk-off day (Tue) and one reversal bounce (Wed). Net result for a blind account: unknown but operationally the right choice was zero-action.
+
+
+## 2026-04-23 (Thu) — Market Open Routine: STAND DOWN (Day 4 of ops incident)
+- **Action:** No trades placed. No orders attempted.
+- **Reason:** Alpaca authenticated endpoints still returning `{"message": "unauthorized."}` at the open:
+  - `get_account()` → unauthorized
+  - `get_positions()` → unauthorized
+  - `get_open_orders()` → unauthorized
+- **Hard gate active:** Per strategy.md and research_log.md rules of engagement for today, the credential-rotation gate requires operator confirmation out-of-loop BEFORE any retry or order placement. No such confirmation has been logged. This is Day 4 / session 10 of the outage.
+- **Guardrails that cannot be enforced without auth:** 10% max size, 5-max concurrent, -2% daily loss halt, -8% hard cut, 5% trailing stop placement. Trading without these is an explicit guardrail violation — would rather not trade than break risk rules.
+- **Regime context (market data still works):** Tape is RISK-ON REPAIR. SPY 711.21 reclaimed the 705 line. NVDA $202.50 has re-triggered its original $202.25 breakout pivot — this was the A+ setup of the plan. IWM at $276.48 offers a spring reclaim setup >$277. ISRG and IGV are already extended; no chase. In a tradeable world, today's plan would have been: NVDA 50% starter on hold of $202.25–$203.25 + IWM half-size on reclaim >$277.
+- **Forfeited setups today (Day 4):**
+  - NVDA $202.25 breakout RE-TRIGGER (MEDIUM-HIGH conviction) — the originally-planned Monday setup has come back around; missed again
+  - IWM spring reclaim >$277 (MEDIUM) — B+ setup, failed-breakdown pattern
+  - SPY 709.50 pullback trend-follow (LOW-MED, tactical)
+- **Escalation (out-of-loop, unchanged):**
+  1. Rotate Alpaca API keys — not yet done after 4 sessions
+  2. Verify account status and positions via broker UI directly
+  3. Confirm no stranded open orders or uncovered positions
+  4. Log rotation in trade_log.md, then resume routine
+- **No ClickUp notification sent** (per instructions: notify only when trades are actually placed).
+- **Days blocked by ops issues: 4** (2026-04-20, 2026-04-21, 2026-04-22, 2026-04-23).
+- **Cumulative opportunity cost (estimated):** ISRG $455→$484 (+6.4%) setup fully played out without participation; NVDA re-trigger is live today; IWM spring today. 4th straight session of missed A-tier setups. The operational issue has now clearly dominated any market-based P&L for the week.
