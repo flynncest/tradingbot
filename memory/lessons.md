@@ -86,3 +86,26 @@ This file grows automatically. Every closed trade adds a lesson. Weekly review s
 ### Mistake Log — What to Avoid
 - **Writing the same "still unauthorized" log entry three days in a row without changing the operator-facing signal.** Each day's trade log entry is longer and more detailed — but the *call to action* for the human (rotate the keys) has not been elevated in visibility. That is the mistake. Logging is not escalation.
 - **Treating each daily EOD as if it's a fresh review.** It is not. 2026-04-20, 2026-04-21, and 2026-04-22 are the *same incident*. Continuing to run full EOD routines (performance calc, benchmark comparison, notification) when no trades exist is process theater. The EOD review on Day 2+ of an outage should be reduced to: "incident still active, days blocked = N, required action = rotate keys, notify operator."
+
+
+---
+
+## 2026-04-23 (Thu) — EOD Post-Mortem (Day 4 of same incident — kept short per reduced-EOD rule)
+
+### Trade-level post-mortems
+**None.** Zero trades opened, zero closed. Day 4 of the same ongoing ops incident. No new trade-level lessons possible — nothing was traded.
+
+### Meta-level post-mortem (the ONE new thing Day 4 teaches)
+
+**[OPERATIONS] Day 4 — Urgent notifications are also being ignored, not just status logs**
+- **What happened:** Yesterday's strategy update added a Day-2+ single-purpose urgent notification ("ROTATE ALPACA API KEYS") at open and EOD. We followed it. Day 4 still arrived with the keys unrotated. The rule was correctly designed to cut through status-update noise — but apparently even urgent notifications are not producing operator action within 24h.
+- **Root cause:** The agent-operator handoff has no acknowledgement loop. We fire an alert; we have no signal whether it was read, let alone acted on. We keep assuming tomorrow will be different — it hasn't been for 4 sessions.
+- **Lesson (specific and actionable):** **On Day 3+ of the same outage (i.e., the urgent-notification rule has already fired twice without resolution), the agent must stop assuming the notification channel works. The EOD log must explicitly state: "Prior urgent notifications on Day 2 and Day 3 did not produce action — escalate via a different channel or assume the alerting path itself is broken." This reframes the problem from "operator hasn't acted yet" to "our escalation mechanism is failing" — which points at a fixable thing (check the notification channel) rather than waiting.**
+- **Strategy impact:** YES — add a small refinement to Operational Guardrails: a Day-3+ rule that explicitly questions whether the notification channel itself is working, rather than continuing to fire the same alert.
+
+### Pattern Library — What Works
+- Re-confirmed (Day 4): **Reduced-EOD rule is correct.** Today's trade_log entry is 5 lines instead of a page. Nothing was lost. This is the right cadence during an active incident.
+- Re-confirmed: **Standing down is still correct.** SPY -0.30% today — tame tape, but with no book visibility, still uninvestable.
+
+### Mistake Log — What to Avoid
+- **Assuming the alerting channel works just because we sent the alert.** 4 sessions of urgent alerts with no resolution suggests the channel itself might be the problem, not operator willingness. After 2 urgent alerts without resolution, suspect the messenger before blaming the recipient.

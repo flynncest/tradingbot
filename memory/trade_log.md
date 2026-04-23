@@ -174,3 +174,11 @@
 1. Verify Alpaca API key / secret / permissions are valid and not expired
 2. Confirm account is not flagged/restricted
 3. Re-run midday review once credentials restored
+
+
+## 2026-04-23 — EOD Review: INCIDENT STILL ACTIVE (Day 4, reduced EOD per strategy.md rule)
+- Auth retry: `get_account` → unauthorized, `get_positions` → unauthorized. Public data OK.
+- SPY close $708.36, -0.30% (prev $710.47). Reference only — no portfolio to compare.
+- Trades opened: 0. Trades closed: 0. Days blocked: **4**.
+- Required out-of-loop action: **ROTATE ALPACA API KEYS** — unchanged for 4 sessions.
+- No performance summary regeneration (nothing to summarize; nothing has changed).
