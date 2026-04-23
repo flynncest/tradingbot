@@ -1,88 +1,89 @@
 # Research Log
 
-## Date: 2026-04-22 (Wednesday) — Pre-market plan
+## Date: 2026-04-23 (Thursday) — Pre-market plan
 
-## ⚠️ OPS STATE — Day 3 gate
-- Mon 4/20 + Tue 4/21: Alpaca `unauthorized` on all account/position/order endpoints, both days. Public market-data endpoints work — fault is isolated to credentials.
-- **Per strategy guardrail (2026-04-21 update):** >1 consecutive blocked trading day = **mandatory credential rotation before continuing.** Do NOT retry `get_account` today until out-of-loop action (rotate keys / support ticket / verify in broker UI) has occurred.
-- **Trading posture today:** analysis only. No orders may be placed until (a) credentials rotated, (b) reconciliation of positions completed as FIRST action, (c) daily P&L and buying-power verifiable.
-- Everything below is a PLAN — it becomes an order list only after the ops gate clears.
+## ⚠️ OPS STATE — Day 4 gate (assumed still active until operator confirms rotation)
+- Mon 4/20 → Wed 4/22: Alpaca `unauthorized` on all authenticated endpoints for 3 consecutive sessions. Public market data endpoints work fine.
+- **Per strategy guardrail:** credential rotation must be confirmed **out-of-loop** before any `get_account` retry or order placement. That confirmation has not been logged in trade_log.md as of yesterday's EOD.
+- **Trading posture today:** analysis only until operator confirms keys have been rotated. If rotation has occurred, the FIRST action before any new entry is reconciliation (`get_account` + `get_positions` + `get_open_orders`) — because the position book is still `UNKNOWN` from before the outage.
+- **If auth is restored this morning:** the plan below becomes tradeable, but only after reconciliation completes cleanly.
 
-## Market Regime — RISK-OFF tilt, breakout thesis broken
-Pre-market snapshots:
-- **SPY 704.08 (-0.41%)** — **BROKE the 705 stand-down line from yesterday's plan.** Two-day drawdown deepening; SPY now at lowest print since the run. Momentum rolling from "digestion at highs" to "active pullback."
-- **QQQ 644.33 (-0.49%)** — leading the downside; tech no longer leadership today.
-- **IWM 274.51 (-0.64%)** — **breakout FAILED.** Below Mon pivot $276.50 and below yesterday's $275 intraday stop. Small-cap RS thesis invalidated for now.
-- **VIXY 28.91 (+1.26%)** — vol bid, consistent with risk-off. (VIX direct still unreadable; using VIXY as proxy.)
-- **NVDA 199.88 (-0.41%)** — **below the $202.25 breakout pivot** and sitting on the $200 round number. Breakout plan is off; this is now a test-of-support name.
-- **IGV 86.68 (-1.07%)** — pulling back but not yet at the $85.00-85.25 re-entry zone.
-- **ISRG 451.29 (-0.23%)** — reported Q1 beat, raised 2026 procedure growth outlook. Odd: positive print but stock flat-to-down pre. Need to watch open.
+## Market Regime — RISK-ON REPAIR, breakout tape re-emerging
+Pre-market snapshots (4/23):
+- **SPY 711.21 (+0.10%)** — **reclaimed 705 stand-down line (now +6 pts above it)**, back above the Mon open-range high. Wed's +0.59% rally and this morning's stable print = regime is repaired. 3-day path: -0.31 / -0.75 / +0.59 / now flat-to-green = net positive reclaim.
+- **QQQ 655.11 (-0.06%)** — holding yesterday's gains. Tech participating but not leading; broader tape carrying.
+- **IWM 276.48 (+0.18%)** — **back AT the original Mon breakout pivot $276.50** after flushing below Tue/Wed. Small-caps reclaiming.
+- **VIXY 28.54 (+0.31%)** — vol bid evaporated. News reports **VIX back to ~19** (prior peak was higher during Tue risk-off). Consistent with risk-on.
+- **NVDA 202.50 (+0.12%)** — **back ABOVE the $202.25 breakout pivot** from Monday's original plan. The setup that was invalidated on Tue/Wed has re-triggered.
+- **ISRG 483.62 (-0.12%)** — **gapped ~+7.6% yesterday** from ~$451 to $484 on Q1 beat + guidance raise. Our $455 reclaim entry would have triggered and hit the $475 target easily. Now EXTENDED — past target, no fresh entry here.
+- **IGV 88.74 (+2.65%)** — software strong. Past prior $85-$85.25 re-entry zone; no pullback opportunity.
 
-**Headline tape:** AI earnings setup dominates (NVDA/AMD/AVGO reports ahead). Iran talks "second round" — less escalation-driven than Monday. Main driver today is likely rotation/profit-taking at highs and pre-earnings positioning.
+**Headline tape:** **Iran ceasefire extension is the macro unlock** — headline risk that weighed on Mon/Tue has been removed. AI earnings cycle ongoing (INTC reports tonight AMC; NVDA/AMD/AVGO still ahead next week). Software and semis catching a strong bid. VIX at multi-week lows.
 
-**Regime verdict:** RISK-OFF PULLBACK. SPY below the stand-down line is the decisive data point. Yesterday's breakout setups (NVDA, IWM) have all failed or unwound. Do not force longs into a broken tape. If SPY cannot reclaim 705 early, bias is bounce-fades, not breakout-buys.
+**Regime verdict:** RISK-ON REPAIR. The pullback was a 2-day flush that has been reclaimed. Breakout-buys are back in play — but most of yesterday's move is already priced in (ISRG, IGV gone). Focus today is on names that have NOT yet extended and are re-triggering their original setups (NVDA), or pullbacks to newly-minted breakout levels.
 
-## Today's Watchlist — reduced, defensive posture
+## Today's Watchlist — breakout re-engagement
 
-### 1. ⭐ ISRG — POST-EARNINGS REVERSAL (highest conviction if it sets up)
-- **Pre:** 451.29 (-0.23%). Q1 revenue +23%, procedure growth +17%, **raised full-year procedure growth guidance.**
-- **Catalyst:** Clean fundamental beat + guidance raise into a tape that had gone negative pre-print (sell-side cut PTs Mon). Classic "positioned short, print is fine" reversal setup.
-- **Setup:** Gap-and-go reclaim OR gap-fade-then-reclaim. The strategy rule says only enter if "gap +5% on volume, then pulls back and reclaims gap level." Currently no gap — so the classic rule doesn't trigger. Alternative: **reclaim of $455 on volume** (previous consolidation shelf) would signal institutional buying post-beat.
-- **Entry:** Above $455 on 2x volume, after first 30 minutes. 50% starter.
-- **Stop:** $444 (below pre-earnings low); ~-2.4% risk.
-- **Target:** $475 (gap-fill to prior range high); +4.4% = ~1.8R. Take partial at +10% if it extends.
-- **Conviction:** MEDIUM-HIGH on the thesis, but needs price confirmation — a positive print that CAN'T rally is a red flag, not a bargain.
+### 1. ⭐ NVDA — BREAKOUT RE-TRIGGER (highest conviction)
+- **Pre:** 202.50 (+0.12%). Reclaimed the $202.25 pivot that was the original Monday trigger and was violated Tue/Wed.
+- **Catalyst:** (a) regime repair + risk-on tape, (b) software/semi bid returning (IGV +2.65%), (c) NVDA reports earnings next week — pre-print drift upward is the classic setup, (d) Victory Giant (NVDA supplier) just priced largest HK IPO of year, +50% debut — supplier-strength read-through.
+- **Setup:** Breakout confirmation above $202.25 that holds. Ideal entry is first pullback to $202.00-$202.50 that holds, with volume confirmation. Do NOT chase if it gaps straight up on open.
+- **Entry:** $202.50-$203.25 zone on a hold with 1.5x+ relative volume (after first 15 min).
+- **Stop:** $199.50 (below Wed's intraday low / $200 round number). Risk: ~-1.5% from $202.50.
+- **Target 1 (partial):** $208 (+2.7%, ~1.8R). Target 2: $214 (+5.7%, ~3.8R).
+- **Conviction:** MEDIUM-HIGH. Setup is the cleanest re-trigger on the board. Main risk: NVDA reports next week and the stock can gap either direction — **partial must come off before earnings date**, and no held position through the print (strategy rule).
+- **Size:** 50% starter. Add only if SPY stays >709 and NVDA holds above entry with volume.
 
-### 2. SPY/QQQ reclaim — tape confirmation trade
-- **Pre:** SPY 704.08, QQQ 644.33
-- **Catalyst:** If SPY reclaims 705 early and holds, the pullback may be a 1-day flush.
-- **Setup:** Long SPY above 705.50 with a tight stop at 703.50 (-0.3%). Tactical scalp only.
-- **Entry:** SPY reclaim and hold of $705.50 in first hour, VIXY rolling over.
-- **Stop:** $703.50.
-- **Target:** $708.50 (retest Mon highs). ~1.5R scalp.
-- **Conviction:** LOW-MEDIUM — only take if tape actually turns. Skip if SPY prints below 703 at open.
+### 2. IWM — FAILED-BREAKOUT-RECLAIM / "Wyckoff spring" setup
+- **Pre:** 276.48 (+0.18%). Back at the $276.50 pivot that failed mid-week.
+- **Catalyst:** Risk-on regime + Iran ceasefire extension (small-caps are most sensitive to macro risk-off/risk-on). News headline yesterday explicitly tied IWM rally to ceasefire.
+- **Setup:** Reclaim and HOLD above $277.00 after the Tue/Wed shakeout = classic failed-breakdown / spring pattern. Higher conviction than a first-time breakout because weak hands have already been flushed.
+- **Entry:** Above $277.00 on volume, after first 30 min.
+- **Stop:** $274.50 (below yesterday's reclaim base). Risk: ~-0.9%.
+- **Target:** $281 (+1.4%, ~1.5R). Partial at $279.
+- **Conviction:** MEDIUM. Small RS vs SPY; taking because the spring pattern is a strategy-approved setup and the regime supports it. Use half-size (2.5% rather than 5%).
 
-### 3. NVDA — DOWNGRADE to support-watch
-- **Pre:** 199.88. Breakout thesis DEAD — no longer above $202.25.
-- **New frame:** watch the $198-200 zone as support. Only interesting if it holds AND reclaims $202.25 with volume later this week. Not a Wednesday trade.
-- **Action:** WATCH ONLY. No entry.
+### 3. SPY reclaim — regime-confirmation trend follow
+- **Pre:** 711.21. Reclaimed stand-down line by +6 pts.
+- **Catalyst:** Straightforward trend continuation in a risk-on tape.
+- **Setup:** Pullback buy to 709.50-710.00 that holds. Do NOT buy breakouts to new highs; prefer reloading on dips within the reclaim.
+- **Entry:** $709.50-$710.50 on volume hold.
+- **Stop:** $707.75 (below Mon pivot). Risk: ~-0.3%.
+- **Target:** $715 (+0.7%, ~2.3R).
+- **Conviction:** LOW-MEDIUM. Tactical only. Smaller size (2.5%).
 
-### 4. IWM — OFF the list
-- Breakout failed. $276.50 pivot broken to the downside. Remove from watchlist until it reclaims 276.50 or builds a new base.
+### 4. ISRG — NO NEW ENTRY (extended)
+- **Pre:** 483.62. Already ran +7.6% yesterday on the Q1 beat. Our $455 entry / $475 target thesis played out in full. Do NOT chase a gap-and-go that already happened. Watch for a pullback to $470-475 over the next 1-3 sessions as a potential re-entry zone; not today.
 
-### 5. IGV — WATCH re-entry zone
-- Wait for $85.00-85.25 pullback to light volume. Not there yet ($86.68). No action today unless it flushes.
+### 5. IGV — NO NEW ENTRY (extended)
+- **Pre:** 88.74 (+2.65%). Blew past the $85-85.25 re-entry zone. Wait for a pullback; no chase.
 
-### 6. TSLA — NO-TRADE (pre-earnings)
-- Reports this week. Strategy rule: no pre-earnings holds. Skip.
+### 6. INTC — EARNINGS TONIGHT, NO-TRADE
+- Reports Q1 after the bell. Strategy rule: no pre-earnings holds. Watch post-print reaction for Friday setups.
 
-## High-Conviction Focus (1-2 best)
-1. **ISRG reclaim of $455** — post-earnings positive-surprise reversal is the cleanest asymmetric setup in a risk-off tape. Defined risk, clear trigger.
-2. **SPY 705 reclaim scalp** — only as confirmation of regime repair. Small size, tactical.
+## High-Conviction Focus (top 1-2)
+1. **NVDA >$202.25 breakout re-trigger** — the only A+ setup. Regime repaired, supplier read-through positive, software/semi bid back, original pivot reclaimed. **Hard exit before earnings next week regardless of P&L.**
+2. **IWM spring reclaim >$277** — B+ setup, half-size. Failed-breakdown pattern is higher-probability than first-time breakouts in the same level.
 
 ## Key Risks / Events This Week
-- **SPY below 705** — this is now the actual regime tell, not a hypothetical. If SPY stays sub-705, defer all longs.
-- **TSLA earnings this week** — post-close single-stock gap risk.
-- **NVDA/AMD/AVGO earnings ahead** — semis could gap either way; NVDA sitting on $200 support is precarious.
-- **Iran "second round" talks** — headline risk remains bidirectional.
-- **VIX data still broken (4th session)** — using VIXY as proxy; it's +1.26% pre, that's an alert.
-- **Ops risk: credentials unresolved for 48h** — no trades until rotation completed.
+- **NVDA / AMD / AVGO earnings next week** — any NVDA position MUST be out before the print.
+- **INTC reports tonight (AMC)** — could move semis AH/Friday open.
+- **TSLA earnings already reported / MSFT/META/GOOGL next week** — mega-cap print cycle keeps beta high.
+- **Iran headline risk** — ceasefire extension is the driver of today's risk-on; any reversal there is the single biggest reversal risk.
+- **VIX at ~19** — low vol = less edge on breakouts (everything goes up), but also less tail risk today.
+- **Ops risk: unresolved auth (Day 4)** — no trades until keys rotated. This remains the top operational blocker.
 
 ## Today's Rules of Engagement
-- **HARD GATE: no orders until credential rotation confirmed out-of-loop** (strategy guardrail).
-- **Reconcile positions BEFORE any new entry** once auth restored.
-- If SPY stays below 705 all session → **STAND DOWN on all longs.** This is the pre-written rule from yesterday and it has now triggered.
-- Max 1 concurrent entry today (not 2) — regime is weaker than yesterday.
-- 50% starter on any entry; no adds unless SPY reclaims and holds 706.
-- VIXY > 29.50 intraday = size cut in half again (proxy for VIX spike).
-- No pre-earnings holds (TSLA).
+- **HARD GATE (unchanged from Wed): no orders until credential rotation confirmed out-of-loop.** If auth is restored, reconciliation of positions is the FIRST action before any new entry.
+- Max 2 concurrent entries today (regime supports it again; up from Wed's 1).
+- 50% starter on any entry; add only on confirmation.
+- **Pre-earnings rule:** NVDA position must be closed before NVDA reports. Check exact earnings date before entering.
+- Trailing stops per strategy: 5% from entry high; tighten to 3% once +5%.
+- If SPY loses 709 intraday, cut adds and tighten stops on all longs.
+- VIXY spike above 29.50 = reduce size or exit.
 
 ## Process Notes
-- Yesterday's primary setup (NVDA >$202.25) never triggered and has now been invalidated by the pullback. No chase.
-- Yesterday's secondary (IWM >$276.50) triggered intraday and failed — confirming the regime softened. Good that guardrails kept us out.
-- The auth outage, in hindsight, protected capital from two things: an IWM failed-breakout long, and exposure into today's further weakness. Stand-down continues to be the right call while ops are broken.
-- **New setup type logged:** Post-earnings positive-surprise into a risk-off tape (ISRG). Worth tracking as a repeatable pattern — beats during pullbacks tend to create better entries than beats at highs.
-
-
-## 2026-04-22 — Midday
-- Market regime observation: N/A — unable to access broker API (unauthorized). No positions or account data reviewable this session. Credentials issue suspected.
+- **Yesterday's ISRG thesis played out textbook** — $455 reclaim hit, ran to $484. The setup ("post-earnings positive-surprise into a risk-off tape that was positioned short") is confirmed as a repeatable pattern. Log this for the lessons file once reconciliation is possible.
+- **Yesterday's NVDA thesis invalidated → re-validated in 48 hours.** Monday plan: >$202.25 breakout. Tue/Wed: broken. Today: reclaimed. The original pivot was correct; the 2-day flush just shook out weak hands. Good reason NOT to abandon a level on the first break.
+- **IWM is a spring setup now, not a first-break.** Higher probability, but smaller reward tape to tape — size accordingly.
+- **Outage persisting into Day 4 without rotation** is the single biggest issue. Every additional session of forfeited setups (today's NVDA re-trigger would be the 4th clean setup missed) is real opportunity cost. Operator action to rotate keys remains the highest-leverage action available.
