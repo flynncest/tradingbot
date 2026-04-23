@@ -87,3 +87,8 @@ Pre-market snapshots (4/23):
 - **Yesterday's NVDA thesis invalidated → re-validated in 48 hours.** Monday plan: >$202.25 breakout. Tue/Wed: broken. Today: reclaimed. The original pivot was correct; the 2-day flush just shook out weak hands. Good reason NOT to abandon a level on the first break.
 - **IWM is a spring setup now, not a first-break.** Higher probability, but smaller reward tape to tape — size accordingly.
 - **Outage persisting into Day 4 without rotation** is the single biggest issue. Every additional session of forfeited setups (today's NVDA re-trigger would be the 4th clean setup missed) is real opportunity cost. Operator action to rotate keys remains the highest-leverage action available.
+
+
+## 2026-04-23 — Midday Observation
+
+Unable to observe market regime via positions/account data — Alpaca API returning unauthorized on all endpoints. No position or P&L data available this midday session. Operational/credential issue, not a market signal. Flag for credential rotation check.

@@ -151,3 +151,26 @@
 - **No ClickUp notification sent** (per instructions: notify only when trades are actually placed).
 - **Days blocked by ops issues: 4** (2026-04-20, 2026-04-21, 2026-04-22, 2026-04-23).
 - **Cumulative opportunity cost (estimated):** ISRG $455→$484 (+6.4%) setup fully played out without participation; NVDA re-trigger is live today; IWM spring today. 4th straight session of missed A-tier setups. The operational issue has now clearly dominated any market-based P&L for the week.
+
+
+## 2026-04-23 — Midday Review: BLOCKED (API Unauthorized)
+
+**Status:** Unable to execute midday position review routine.
+
+**Issue:** All Alpaca API calls returned `{"message": "unauthorized."}`:
+- get_account() → unauthorized
+- get_positions() → unauthorized
+- get_open_orders() → unauthorized
+
+**Actions taken:** None. Cannot verify account equity, positions, P&L, or existing orders.
+
+**Risk implications:**
+- Cannot confirm whether 2% daily loss halt has triggered
+- Cannot cut losers breaching -8% threshold
+- Cannot tighten trailing stops on +5% winners
+- Positions are effectively unmanaged this session
+
+**Next steps required (human):**
+1. Verify Alpaca API key / secret / permissions are valid and not expired
+2. Confirm account is not flagged/restricted
+3. Re-run midday review once credentials restored
